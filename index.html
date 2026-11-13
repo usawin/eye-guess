@@ -1,0 +1,152 @@
+
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ทายดวงตา 👁️</title>
+
+<style>
+body {
+  font-family: Arial, sans-serif;
+  background: #f7f7f7;
+  text-align: center;
+  padding: 25px 15px;
+  color: #222;
+}
+
+.container {
+  max-width: 500px;
+  margin: auto;
+  background: white;
+  padding: 25px;
+  border-radius: 18px;
+}
+
+h1 { font-size: 28px; }
+
+.photos {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-top: 25px;
+}
+
+.photo {
+  border: 2px solid #eee;
+  border-radius: 12px;
+  overflow: hidden;
+  cursor: pointer;
+  background: white;
+}
+
+.photo img {
+  width: 100%;
+  aspect-ratio: 1;
+  object-fit: cover;
+  display: block;
+}
+
+.photo span {
+  display: block;
+  padding: 9px;
+}
+
+.photo.selected {
+  border: 3px solid #333;
+}
+
+#result {
+  margin: 20px 0;
+  font-weight: bold;
+}
+
+button {
+  background: #222;
+  color: white;
+  border: 0;
+  border-radius: 25px;
+  padding: 12px 25px;
+  cursor: pointer;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>👁️ ทายดวงตา</h1>
+<p>เลือกรูปดวงตาที่ถูกต้อง</p>
+
+<div class="photos" id="photos"></div>
+
+<div id="result"></div>
+
+<button onclick="resetGame()">เล่นอีกครั้ง</button>
+
+</div>
+
+<script>
+
+// เปลี่ยนชื่อรูปภาพได้ตรงนี้
+const images = [
+  "eye1.jpg",
+  "eye2.jpg",
+  "eye3.jpg",
+  "eye4.jpg",
+  "eye5.jpg",
+  "eye6.jpg"
+];
+
+// กำหนดรูปที่ถูกต้อง (เริ่มนับจาก 0)
+// 0 = รูปแรก, 5 = รูปที่หก
+const correctAnswer = 2;
+
+function showPhotos() {
+  const area = document.getElementById("photos");
+  area.innerHTML = "";
+
+  images.forEach((image, index) => {
+    const div = document.createElement("div");
+    div.className = "photo";
+
+    div.innerHTML = `
+      <img src="${image}" alt="ดวงตารูปที่ ${index + 1}">
+      <span>รูปที่ ${index + 1}</span>
+    `;
+
+    div.onclick = () => checkAnswer(index, div);
+
+    area.appendChild(div);
+  });
+}
+
+function checkAnswer(index, element) {
+  const result = document.getElementById("result");
+
+  document.querySelectorAll(".photo").forEach(photo => {
+    photo.style.pointerEvents = "none";
+  });
+
+  if (index === correctAnswer) {
+    element.classList.add("selected");
+    result.innerHTML = "✅ ถูกต้อง! เก่งมาก";
+    result.style.color = "green";
+  } else {
+    result.innerHTML = "❌ ยังไม่ถูก ลองใหม่อีกครั้ง";
+    result.style.color = "red";
+  }
+}
+
+function resetGame() {
+  document.getElementById("result").innerHTML = "";
+  showPhotos();
+}
+
+showPhotos();
+
+</script>
+
+</body>
+</html>
