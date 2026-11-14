@@ -1,0 +1,247 @@
+
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ทายดวงตา 👁️</title>
+
+<style>
+body {
+  .categories {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 25px 0;
+}
+
+.categories button {
+  background: #f8dce8;
+  color: #333;
+  border-radius: 25px;
+  padding: 12px 20px;
+  border: none;
+  cursor: pointer;
+}
+  
+  font-family: Arial, sans-serif;
+  background: #f7f7f7;
+  text-align: center;
+  padding: 25px 15px;
+  color: #222;
+}
+
+.container {
+  max-width: 900px;
+  width: 100%;
+  margin: auto;
+  background: white;
+  padding: 25px;
+  border-radius: 18px;
+}
+  
+h1 { font-size: 28px; }
+
+.photos {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-top: 25px;
+}
+
+.photos {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  margin-top: 25px;
+}
+
+.photo {
+  position: relative;
+  border: 2px solid #eee;
+  border-radius: 15px;
+  overflow: hidden;
+  cursor: pointer;
+  background: white;
+  transition: 0.2s;
+}
+
+.photo img {
+  width: 100%;
+  aspect-ratio: 2.2 / 1;
+  object-fit: cover;
+  display: block;
+}
+
+.photo span {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  background: white;
+  color: #333;
+  width: 65px;
+  padding: 5px;
+  border-radius: 30px 30px 0 0;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.photo.selected {
+  border: 3px solid #333;
+  transform: scale(0.98);
+}
+
+.photo:hover {
+  border-color: #999;
+}
+
+.photo.selected {
+  border: 3px solid #333;
+}
+
+#result {
+  margin: 20px 0;
+  font-weight: bold;
+}
+
+button {
+  background: #222;
+  color: white;
+  border: 0;
+  border-radius: 25px;
+  padding: 12px 25px;
+  cursor: pointer;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>👁️ ทายดวงตา</h1>
+
+<!-- เพิ่ม HTML ตรงนี้ -->
+<div class="categories">
+  <button onclick="changeGame('eyes')">👁️ ทายตา</button>
+  <button onclick="changeGame('mouth')">👄 ทายปาก</button>
+  <button onclick="changeGame('nose')">👃 ทายจมูก</button>
+  <button onclick="changeGame('ears')">👂 ทายหู</button>
+</div>
+
+<div class="photos" id="photos"></div>
+<div id="result"></div>
+
+<button onclick="resetGame()">เล่นอีกครั้ง</button>
+
+</div>
+
+</body>
+
+<script>
+
+
+
+const games = {
+  eyes: {
+    name: "ทายดวงตา",
+    images: [1, 2, 3, 4].map(n => `images/eye${n}.jpg`),
+    correct: "images/eye3.jpg"
+  },
+  mouth: {
+    name: "ทายปาก",
+    images: [1, 2, 3, 4].map(n => `images/mouth${n}.jpg`),
+    correct: "images/mouth3.jpg"
+  },
+  nose: {
+    name: "ทายจมูก",
+    images: [1, 2, 3, 4].map(n => `images/nose${n}.jpg`),
+    correct: "images/nose3.jpg"
+  },
+  ears: {
+    name: "ทายหู",
+    images: [1, 2, 3, 4].map(n => `images/ear${n}.jpg`),
+    correct: "images/ear3.jpg"
+  }
+};
+
+let currentGame = "eyes";
+let currentImages = [];
+let answered = false;
+
+// สุ่มตำแหน่งรูป
+function shuffleImages(images) {
+  return [...images].sort(() => Math.random() - 0.5);
+}
+
+// เปลี่ยนหมวดเกม
+function changeGame(game) {
+  currentGame = game;
+  answered = false;
+
+  document.querySelector("h1").textContent =
+    "👁️ " + games[game].name;
+
+  document.getElementById("result").innerHTML = "";
+
+  showPhotos();
+}
+
+// แสดงรูปภาพ
+function showPhotos() {
+  const area = document.getElementById("photos");
+  area.innerHTML = "";
+
+  currentImages = shuffleImages(games[currentGame].images);
+
+  currentImages.forEach((image, index) => {
+    const div = document.createElement("div");
+    div.className = "photo";
+
+    div.innerHTML = `
+      <img src="${image}" alt="รูปที่ ${index + 1}">
+      <span>${index + 1}</span>
+    `;
+
+    div.onclick = () => checkAnswer(image, div);
+
+    area.appendChild(div);
+  });
+}
+
+// ตรวจคำตอบ
+function checkAnswer(image, element) {
+  if (answered) return;
+
+  answered = true;
+
+  const result = document.getElementById("result");
+
+  if (image === games[currentGame].correct) {
+    element.classList.add("selected");
+    result.innerHTML = "✅ ถูกต้อง! เก่งมาก";
+    result.style.color = "green";
+  } else {
+    element.classList.add("wrong");
+    result.innerHTML = "❌ ยังไม่ถูก ลองอีกครั้งนะ";
+    result.style.color = "red";
+  }
+}
+
+// เล่นอีกครั้ง สุ่มตำแหน่งใหม่
+function resetGame() {
+  answered = false;
+  document.getElementById("result").innerHTML = "";
+  showPhotos();
+}
+
+showPhotos();
+
+
+
+</script>
+
+</body>
+</html>
